@@ -18,7 +18,7 @@ class WordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = _colorForState(state);
+    final color = _colorForState(state, Theme.of(context).brightness);
 
     return Expanded(
       child: AnimatedContainer(
@@ -30,7 +30,7 @@ class WordView extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(2, 2, 2, 6),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Material(
@@ -54,10 +54,13 @@ class WordView extends StatelessWidget {
     );
   }
 
-  Color _colorForState(WordViewState state) {
+  Color _colorForState(WordViewState state, Brightness mode) {
+    final darkGrey = Colors.grey.shade700;
+    final lightGrey = Colors.grey.shade400;
+
     switch (state) {
       case WordViewState.inactive:
-        return Colors.grey.shade800;
+        return mode == Brightness.light ? darkGrey : lightGrey;
       case WordViewState.selected:
         return Colors.blue.shade700;
       case WordViewState.correct:
@@ -65,7 +68,7 @@ class WordView extends StatelessWidget {
       case WordViewState.incorrect:
         return Colors.red.shade700;
       case WordViewState.matched:
-        return Colors.grey.shade400;
+        return mode == Brightness.light ? lightGrey : darkGrey;
     }
   }
 }

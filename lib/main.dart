@@ -8,5 +8,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(home: HomeScreen());
+  Widget build(BuildContext context) => MaterialApp(
+        darkTheme: ThemeData.dark(), 
+        themeMode: ThemeMode.system,
+        home: HomeScreen(),
+      );
 }
