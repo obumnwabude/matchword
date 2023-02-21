@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum WordViewState { inactive, selected, correct, incorrect }
+import '../models/language_word.dart';
+
+enum WordViewState { inactive, selected, correct, incorrect, matched }
 
 class WordView extends StatelessWidget {
-  final String word;
+  final LanguageWord word;
   final WordViewState state;
   final VoidCallback onTap;
 
@@ -18,30 +20,32 @@ class WordView extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = _colorForState(state);
 
-    return AnimatedContainer(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(2, 2, 2, 6),
+    return Expanded(
+      child: AnimatedContainer(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          color: color,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(2, 2, 2, 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            splashColor: color,
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                word,
-                style: TextStyle(color: color),
-                textAlign: TextAlign.center,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              splashColor: color,
+              onTap: state != WordViewState.matched ? onTap : null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                child: Text(
+                  word.word,
+                  style: TextStyle(color: color, height: 1),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
@@ -53,13 +57,15 @@ class WordView extends StatelessWidget {
   Color _colorForState(WordViewState state) {
     switch (state) {
       case WordViewState.inactive:
-        return Colors.grey;
+        return Colors.grey.shade800;
       case WordViewState.selected:
-        return Colors.blue;
+        return Colors.blue.shade700;
       case WordViewState.correct:
-        return Colors.green;
+        return Colors.green.shade700;
       case WordViewState.incorrect:
-        return Colors.red;
+        return Colors.red.shade700;
+      case WordViewState.matched:
+        return Colors.grey.shade400;
     }
   }
 }
