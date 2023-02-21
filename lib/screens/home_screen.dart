@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'word_view.dart';
+import '../widgets/word_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
