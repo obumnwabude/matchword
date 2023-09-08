@@ -1,49 +1,58 @@
 import 'dart:math';
 
-import 'language_word.dart';
-import 'word_pair.dart';
+import 'matchable_session.dart';
+import 'word_in_column.dart';
 
 class MatchSession {
-  static List<WordPair> _randomize(List<WordPair> wordPairs) {
-    if (wordPairs.length < 2) return wordPairs;
+  MatchSession(this.starter)
+      : randomized = _randomize(starter),
+        _recordingMatches = {
+          for (int i = 0; i < starter.words.length; i++) i: false
+        };
 
+  final Map<WordInColumn, WordInColumn> randomized;
+  final Map<int, bool> _recordingMatches;
+  final MatchableSession starter;
+
+  bool get isComplete => !_recordingMatches.containsValue(false);
+
+  bool match(WordInColumn first, WordInColumn second) {
+    final Map<int, MapEntry<String, String>> indexToWords = {};
+    for (int i = 0; i < starter.words.length; i++) {
+      final wordPair = starter.words.entries.elementAt(i);
+      if (first.column == starter.pro) {
+        if (wordPair.key == first.word && wordPair.value == second.word) {
+          indexToWords[i] = wordPair;
+        }
+      } else {
+        if (wordPair.key == second.word && wordPair.value == first.word) {
+          indexToWords[i] = wordPair;
+        }
+      }
+    }
+    for (var entry in indexToWords.entries) {
+      if (!_recordingMatches[entry.key]!) {
+        _recordingMatches[entry.key] = true;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static Map<WordInColumn, WordInColumn> _randomize(MatchableSession starter) {
     final random = Random();
-    final firstWords = [], secondWords = [];
-    final List<WordPair> randomizedPairs = [];
+    final proColumn = starter.words.keys.toList();
+    final contraColumn = starter.words.values.toList();
+    final Map<WordInColumn, WordInColumn> randomized = {};
 
-    for (final pair in wordPairs) {
-      firstWords.add(pair.first);
-      secondWords.add(pair.second);
+    while (proColumn.isNotEmpty) {
+      final proWord = WordInColumn(
+          starter.pro, proColumn.removeAt(random.nextInt(proColumn.length)));
+      final contraWord = WordInColumn(starter.contra,
+          contraColumn.removeAt(random.nextInt(contraColumn.length)));
+      randomized[proWord] = contraWord;
     }
 
-    while (firstWords.isNotEmpty) {
-      randomizedPairs.add(
-        WordPair(
-          firstWords.removeAt(0),
-          secondWords.removeAt(random.nextInt(secondWords.length)),
-        ),
-      );
-    }
-
-    return randomizedPairs;
+    return randomized;
   }
-
-  final List<WordPair> correctPairs;
-  final List<WordPair> displayPairs;
-
-  MatchSession(this.correctPairs) : displayPairs = _randomize(correctPairs);
-
-  bool get isComplete => correctPairs.every((pair) => pair.isMatched);
-
-  bool match(LanguageWord first, LanguageWord second) {
-    final index = correctPairs
-        .indexWhere((pair) => pair.contains(first) && pair.contains(second));
-
-    if (index == -1) return false;
-    correctPairs[index].isMatched = true;
-    return true;
-  }
-
-  WordPair parent(LanguageWord word) =>
-      correctPairs.firstWhere((pair) => pair.contains(word));
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../models/language_word.dart';
+import '../models/word_in_column.dart';
 
 enum WordViewState { inactive, selected, correct, incorrect, matched }
 
 class WordView extends StatelessWidget {
-  final LanguageWord word;
+  final WordInColumn word;
   final WordViewState state;
   final VoidCallback onTap;
 
@@ -26,7 +26,7 @@ class WordView extends StatelessWidget {
           color: color,
           borderRadius: BorderRadius.circular(12),
         ),
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         child: Container(
           margin: const EdgeInsets.fromLTRB(2, 2, 2, 6),
           decoration: BoxDecoration(
@@ -40,7 +40,7 @@ class WordView extends StatelessWidget {
               splashColor: color,
               onTap: state != WordViewState.matched ? onTap : null,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                 child: Text(
                   word.word,
                   style: TextStyle(color: color, height: 1),

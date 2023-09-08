@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../models/language_word.dart';
 import '../models/match_session.dart';
+import '../models/word_in_column.dart';
 import '../widgets/word_view.dart';
 
 class SessionScreen extends StatefulWidget {
@@ -15,12 +15,12 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  LanguageWord? _tapped;
+  WordInColumn? _tapped;
 
-  void _onTap(LanguageWord word) {
+  void _onTap(WordInColumn word) {
     setState(() {
       if (_tapped == null ||
-          (_tapped!.language == word.language && _tapped != word)) {
+          (_tapped!.column == word.column && _tapped != word)) {
         _tapped = word;
       } else {
         if (_tapped != word) {
@@ -37,20 +37,29 @@ class _SessionScreenState extends State<SessionScreen> {
     });
   }
 
-  WordViewState _wVState(LanguageWord word) {
+  WordViewState _wVState(WordInColumn word) {
     if (word.justPassed) {
       Future.delayed(
         const Duration(seconds: 1),
-        () => setState(() => word.justPassed = false),
+        () {
+          if (mounted) {
+            setState(() {
+              word.hasMatched = true;
+              word.justPassed = false;
+            });
+          }
+        },
       );
       return WordViewState.correct;
     } else if (word.justFailed) {
       Future.delayed(
         const Duration(seconds: 1),
-        () => setState(() => word.justFailed = false),
+        () {
+          if (mounted) setState(() => word.justFailed = false);
+        },
       );
       return WordViewState.incorrect;
-    } else if (widget.session.parent(word).isMatched) {
+    } else if (word.hasMatched) {
       return WordViewState.matched;
     } else if (_tapped != null && _tapped == word) {
       return WordViewState.selected;
@@ -71,27 +80,27 @@ class _SessionScreenState extends State<SessionScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ...widget.session.displayPairs
-                    .map((pair) => [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WordView(
-                                word: pair.first,
-                                state: _wVState(pair.first),
-                                onTap: () => _onTap(pair.first),
-                              ),
-                              const SizedBox(width: 24),
-                              WordView(
-                                word: pair.second,
-                                state: _wVState(pair.second),
-                                onTap: () => _onTap(pair.second),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                        ])
-                    .expand((w) => w),
+                ...widget.session.randomized.entries.map((pair) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WordView(
+                          word: pair.key,
+                          state: _wVState(pair.key),
+                          onTap: () => _onTap(pair.key),
+                        ),
+                        const SizedBox(width: 24),
+                        WordView(
+                          word: pair.value,
+                          state: _wVState(pair.value),
+                          onTap: () => _onTap(pair.value),
+                        )
+                      ],
+                    ),
+                  );
+                }),
                 if (widget.session.isComplete) ...[
                   const SizedBox(height: 40),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
