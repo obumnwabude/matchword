@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class MatchableSession {
   final String pro;
   final String contra;
-  final Map<String, String> words;
+  final List<Map<String, String>> words;
 
   const MatchableSession(
       {required this.pro, required this.contra, required this.words});
@@ -14,7 +14,7 @@ class MatchableSession {
     return MatchableSession(
       pro: map['pro'],
       contra: map['contra'],
-      words: Map<String, String>.from(map['words']),
+      words: map['words'],
     );
   }
 
@@ -32,15 +32,22 @@ class MatchableSession {
     return other is MatchableSession &&
         other.pro == pro &&
         other.contra == contra &&
-        mapEquals(other.words, words);
+        listEquals(other.words, words);
   }
 
   @override
   int get hashCode => pro.hashCode ^ contra.hashCode ^ words.hashCode;
 
-  static const sample = MatchableSession(
-    pro: 'en',
-    contra: 'lm',
-    words: {'God': 'Nyuy', 'thank': 'beri', 'you': 'wo'},
-  );
+  static final sample = MatchableSession.fromMap({
+    'pro': 'en',
+    'contra': 'lm',
+    'words': [
+      {'God': 'Nyuy'},
+      {'thank': 'beri'},
+      {'you': 'wo'},
+      {'God': 'Nyuy'},
+      {'thank': 'beri'},
+      {'you': 'wo'}
+    ]
+  });
 }

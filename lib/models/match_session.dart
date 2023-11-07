@@ -17,22 +17,12 @@ class MatchSession {
   bool get isComplete => !_recordingMatches.containsValue(false);
 
   bool match(WordInColumn first, WordInColumn second) {
-    final Map<int, MapEntry<String, String>> indexToWords = {};
     for (int i = 0; i < starter.words.length; i++) {
-      final wordPair = starter.words.entries.elementAt(i);
-      if (first.column == starter.pro) {
-        if (wordPair.key == first.word && wordPair.value == second.word) {
-          indexToWords[i] = wordPair;
-        }
-      } else {
-        if (wordPair.key == second.word && wordPair.value == first.word) {
-          indexToWords[i] = wordPair;
-        }
-      }
-    }
-    for (var entry in indexToWords.entries) {
-      if (!_recordingMatches[entry.key]!) {
-        _recordingMatches[entry.key] = true;
+      final pair = starter.words[i];
+      if ((pair[first.word] == second.word ||
+              pair[second.word] == first.word) &&
+          !(_recordingMatches[i] ?? false)) {
+        _recordingMatches[i] = true;
         return true;
       }
     }
@@ -41,8 +31,14 @@ class MatchSession {
 
   static Map<WordInColumn, WordInColumn> _randomize(MatchableSession starter) {
     final random = Random();
-    final proColumn = starter.words.keys.toList();
-    final contraColumn = starter.words.values.toList();
+    final proColumn = [];
+    final contraColumn = [];
+    for (final pair in starter.words) {
+      if (pair.entries.isEmpty) continue;
+      final MapEntry(:key, :value) = pair.entries.first;
+      proColumn.add(key);
+      contraColumn.add(value);
+    }
     final Map<WordInColumn, WordInColumn> randomized = {};
 
     while (proColumn.isNotEmpty) {
