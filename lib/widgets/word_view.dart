@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../models/word_in_column.dart';
 
@@ -24,26 +25,31 @@ class WordView extends StatelessWidget {
       child: AnimatedContainer(
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         duration: const Duration(milliseconds: 500),
         child: Container(
-          margin: const EdgeInsets.fromLTRB(2, 2, 2, 6),
+          margin: EdgeInsets.fromLTRB(2.r, 2.r, 2.r, 6.r),
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               splashColor: color,
               onTap: state != WordViewState.matched ? onTap : null,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                padding: EdgeInsets.fromLTRB(2.r, 16.r, 8.r, 16.r),
                 child: Text(
                   word.word,
-                  style: TextStyle(color: color, height: 1),
+                  style: TextStyle(
+                    color: color,
+                    height: 1,
+                    fontSize: 16.sp,
+                    letterSpacing: 0.4,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

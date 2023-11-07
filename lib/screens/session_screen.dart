@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../models/match_session.dart';
 import '../models/word_in_column.dart';
@@ -74,15 +75,15 @@ class _SessionScreenState extends State<SessionScreen> {
       appBar: AppBar(title: const Text('Match Words')),
       body: Center(
         child: SizedBox(
-          width: min(384, MediaQuery.of(context).size.width),
+          width: min(384, 1.sw),
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.r),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ...widget.session.randomized.entries.map((pair) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: EdgeInsets.only(bottom: 24.h),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -91,7 +92,7 @@ class _SessionScreenState extends State<SessionScreen> {
                           state: _wVState(pair.key),
                           onTap: () => _onTap(pair.key),
                         ),
-                        const SizedBox(width: 24),
+                        SizedBox(width: 24.w),
                         WordView(
                           word: pair.value,
                           state: _wVState(pair.value),
@@ -102,7 +103,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   );
                 }),
                 if (widget.session.isComplete) ...[
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40.h),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(),
