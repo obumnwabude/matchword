@@ -25,11 +25,11 @@ class WordView extends StatelessWidget {
       child: AnimatedContainer(
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(10.r),
         ),
         duration: const Duration(milliseconds: 500),
         child: Container(
-          margin: EdgeInsets.fromLTRB(2.r, 2.r, 2.r, 6.r),
+          margin: EdgeInsets.fromLTRB(1.5.r, 1.5.r, 1.5.r, 4.r),
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(8.r),
@@ -41,7 +41,7 @@ class WordView extends StatelessWidget {
               splashColor: color,
               onTap: state != WordViewState.matched ? onTap : null,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(2.r, 16.r, 8.r, 16.r),
+                padding: EdgeInsets.fromLTRB(8.r, 20.r, 8.r, 18.r),
                 child: Text(
                   word.word,
                   style: TextStyle(
