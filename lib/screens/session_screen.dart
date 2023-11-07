@@ -8,7 +8,7 @@ import '../widgets/word_view.dart';
 
 class SessionScreen extends StatefulWidget {
   final MatchSession session;
-  const SessionScreen(this.session, {Key? key}) : super(key: key);
+  const SessionScreen(this.session, {super.key});
 
   @override
   State<SessionScreen> createState() => _SessionScreenState();
