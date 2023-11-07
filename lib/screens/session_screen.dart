@@ -16,6 +16,7 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
+  late final List<ColumnPair> _displayed = widget.session.next(6);
   WordInColumn? _tapped;
 
   void _onTap(WordInColumn word) {
@@ -81,22 +82,22 @@ class _SessionScreenState extends State<SessionScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ...widget.session.randomized.entries.map((pair) {
+                ..._displayed.map((pair) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 24.h),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WordView(
-                          word: pair.key,
-                          state: _wVState(pair.key),
-                          onTap: () => _onTap(pair.key),
+                          word: pair.pro,
+                          state: _wVState(pair.pro),
+                          onTap: () => _onTap(pair.pro),
                         ),
                         SizedBox(width: 24.w),
                         WordView(
-                          word: pair.value,
-                          state: _wVState(pair.value),
-                          onTap: () => _onTap(pair.value),
+                          word: pair.contra,
+                          state: _wVState(pair.contra),
+                          onTap: () => _onTap(pair.contra),
                         )
                       ],
                     ),
